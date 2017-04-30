@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+    <title>グラフ描画</title>
+    <script src="vcanvas.js"></script>
+    <script>
+      'use strict';
+      window.addEventListener("load", function() {
+        // 仮想座標対応Canvasの初期化
+        var vc = new VCanvas( "canvas1" );
+
+        // X軸とY軸を描画
+        vc.scale(0,-1,360,2);
+        vc.beginPath();
+        vc.line( 0,0,360,0);
+        vc.line( 0,-1,0,1 );
+        vc.stroke();
+
+        // 正弦波を描画（計算しながら描画）
+        vc.beginPath();
+        vc.line(0,0,0,0);
+        for( var i=0;i<360;i++ ) {
+          var y = Math.sin( i/180*Math.PI );
+          vc.lineto( i, y );
+        }
+        vc.stroke();
+      });
+    </script>
+  </head>
+  <body>
+    <h1>グラフ描画のサンプル</h1>
+    <canvas id="canvas1" width="300" height="300"></canvs>
+  </body>
+</html>

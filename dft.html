@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+    <title>グラフ描画</title>
+    <script src="vcanvas.js"></script>
+    <script src="WebkitPlayer.js"></script>
+    <script>
+      'use strict';
+      window.addEventListener("load", function() {
+        var samplerate = 44100; // サンプリングレート
+        var data;               // データを入れておく変数
+        var data2;
+        var area = 5;           // 表示領域（全体の先頭5%を表示）
+        var skip = 2;           // グラフ表示時の間引き数
+        var dftarea = 0.23;      // DFTの演算・表示領域を先頭100サンプル程度に調整
+
+        var waves = function(freq, amp, member, sec ) {
+          // 基本周波数と，含まれる周波数スペクトラムを受け取り，波形を合成するメソッド
+          // freqは基本周波数
+          // memberは周波数をkey，振幅をvalueとするハッシュテーブル
+          // secは秒数
+        	data = new Array(samplerate*sec);
+        	for( var i=0; i<data.length; i++ )	data[i] = 0;
+        	for( var j in member ) {
+        		var k = 2 * Math.PI * freq * j / samplerate;
+        		for( var i=0; i<data.length; i++ ){
+        			data[i] += member[j] * Math.sin( k * i );
+        		}
+        	}
+          for( var i=0; i<data.length; i++ ){
+            data[i] *= amp;
+          }
+        };
+
+        var dft = function() {
+          var calcarea = Math.ceil(data.length*dftarea/100); //データ数の計算．ceilは小数点以下を切り上げる
+          data2 = new Array( calcarea );
+          for( var n=0; n<calcarea; n++ ) {
+            var ar = 0.0;
+            var ai = 0.0;
+            for( var m=0; m<calcarea; m++ ) {
+              var x = 2.0 * Math.PI / calcarea * m * n;
+              ar += data[m] * Math.cos( -x );
+              ai += data[m] * Math.sin( -x );
+            }
+            ar /= calcarea;
+            ai /= calcarea;
+            data2[n] = Math.sqrt( ar * ar + ai * ai );
+          }
+        }
+
+        // サンプリング周波数44.1kHz，モノラルとして初期化する
+        var player = new WebkitPlayer( samplerate, 1 );
+
+        // wave1が押された場合に440Hzのsin波を生成する
+        document.getElementById( 'wave1' ).addEventListener( "click", function() {
+          data = new Array( samplerate );
+          var freq = 440;
+          var k = 2 * Math.PI * freq / samplerate;
+          for( var i=0; i<data.length; i++ ){
+            data[i] = Math.sin(k * i);
+          }
+        });
+
+        // wave2が押された場合に880Hzのsin波を生成する
+        document.getElementById( 'wave2' ).addEventListener( "click", function() {
+          data = new Array( samplerate );
+          var freq = 880;
+          var k = 2 * Math.PI * freq / samplerate;
+          for(var i=0; i<data.length; i++){
+            data[i] = Math.sin( k * i );
+          }
+        });
+
+        // wave3が押された場合に440Hzと880Hzのsin波を合成する
+        document.getElementById( 'wave3' ).addEventListener( "click", function() {
+          waves( 440, 0.5, {1:1, 2:1}, 1 );
+        });
+
+        // 矩形波を合成する
+        document.getElementById( 'wave4' ).addEventListener( "click", function() {
+          waves(440, 0.8, {1:1, 3:1/3.0, 5:1/5.0, 7:1/7.0, 9:1/9.0},1);
+        });
+
+        // ノコギリ波を合成する
+        document.getElementById( 'wave5' ).addEventListener( "click", function() {
+          waves(440, 0.3, {1:2, 2:-1, 3:2/3, 4:-1/2, 5:2/5, 6:-1/3},1);
+        });
+
+        document.getElementById( 'graph' ).addEventListener( "click", function() {
+          // 仮想座標対応Canvasの初期化
+          var vc1 = new VCanvas( document.getElementById( "canvas1" ) );
+          vc1.forecolor(0,0,0);
+          var plotnumber = data.length*area/100;
+          vc1.cls();  // 描画内容の消去
+
+          // X軸とY軸の描画
+          vc1.scale( 0, 1, plotnumber, -2 );
+          vc1.beginPath();  // 描画開始の宣言
+          vc1.line( 0, 0, data.length, 0 );
+          vc1.line( 0, -1, 0, 1 );
+          for( var i=0; i<plotnumber; i+=skip * 100 ) {
+            vc1.print( i, 0, i );
+          }
+          vc1.stroke(); // 描画
+
+          // dataの内容の描画
+          vc1.beginPath();  // 描画開始の宣言
+          vc1.lineStart( 0, 0 ); // 始点の設定
+          for( var i=0; i<plotnumber; i+=skip ) {
+            vc1.lineto( i, data[i] );
+          }
+          vc1.stroke(); // 描画
+        });
+
+        document.getElementById( 'sound' ).addEventListener( "click", function() {
+          player.playData( data, 1 );
+        });
+
+
+        document.getElementById( 'dft' ).addEventListener( "click", function() {
+          dft();
+          // 仮想座標対応Canvasの初期化
+          var vc2 = new VCanvas( document.getElementById( "canvas2" ) );
+          vc2.forecolor(0,0,0);
+          vc2.cls();  // 描画内容の消去
+
+          // X軸とY軸の描画
+          vc2.scale( 0, 1, data2.length, -2 );
+          vc2.beginPath();  // 描画開始の宣言
+          vc2.line( 0, 0, data2.length, 0 );
+          vc2.line( 0, -1, 0, 1 );
+          for( var i=0; i<data2.length; i+=skip * 100 ) {
+            vc2.print( i, 0, i );
+          }
+          vc2.stroke(); // 描画
+
+          // dataの内容の描画
+          vc2.beginPath();  // 描画開始の宣言
+          for( var i=1; i<data2.length; i++ ) {
+            vc2.rect( i, 0, i+1, data2[i] );    // DFTのグラフ描画
+            //console.log( i + ":" + data2[i] );          // 演算結果をコンソールに表示
+          }
+          vc2.stroke(); // 描画
+          console.log( data2.length );
+        });
+
+        document.getElementById( 'sound' ).addEventListener( "click", function() {
+          player.playData( data, 1 );
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <h1>グラフ描画のサンプル</h1>
+    <form>
+      <input type="button" value="440Hz" id="wave1">
+      <input type="button" value="880Hz" id="wave2">
+      <input type="button" value="440Hz + 880Hz" id="wave3">
+      <input type="button" value="矩形波" id="wave4">
+      <input type="button" value="ノコギリ波" id="wave5">
+      <input type="button" value="グラフ描画" id="graph">
+      <input type="button" value="音像化" id="sound">
+      <input type="button" value="DFT" id="dft">
+    </form>
+    <canvas id="canvas1" width="800" height="300"></canvas>
+    <canvas id="canvas2" width="800" height="300"></canvas>
+  </body>
+</html>
