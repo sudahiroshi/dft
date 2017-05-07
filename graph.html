@@ -8,7 +8,7 @@
       'use strict';
       window.addEventListener("load", function() {
         // 仮想座標対応Canvasの初期化
-        var vc = new VCanvas( "canvas1" );
+        var vc = new VCanvas( document.getElementById( "canvas1" ) );
 
         // X軸とY軸を描画
         vc.scale(0,-1,360,2);
