@@ -48,10 +48,10 @@ class Wave {
 
 window.addEventListener("load", () => {
   // 波形データを初期化
-  var wave = new Wave();
+  let wave = new Wave();
 
   // サンプリング周波数44.1kHz，モノラルとして初期化する
-  var player = new WebkitPlayer( wave.sample_rate, 1);
+  let player = new WebkitPlayer( wave.sample_rate, 1);
 
   // wave1が押された場合に440Hzのsin波を生成する
   document.getElementById("wave1").addEventListener("click", () => {
@@ -105,9 +105,9 @@ window.addEventListener("load", () => {
 
   document.getElementById("graph").addEventListener("click", () => {
     // 仮想座標対応Canvasの初期化
-    var vc1 = new VCanvas(document.getElementById("canvas1"));
+    let vc1 = new VCanvas(document.getElementById("canvas1"));
     vc1.forecolor(0, 0, 0);
-    var plotnumber = (wave.data.length * wave.area) / 100;
+    let plotnumber = (wave.data.length * wave.area) / 100;
     vc1.cls(); // 描画内容の消去
 
     // X軸とY軸の描画
@@ -115,7 +115,7 @@ window.addEventListener("load", () => {
     vc1.beginPath(); // 描画開始の宣言
     vc1.line(0, 0, wave.data.length, 0);
     vc1.line(0, -1, 0, 1);
-    for (var i = 0; i < plotnumber; i += wave.skip * 100) {
+    for (let i = 0; i < plotnumber; i += wave.skip * 100) {
       vc1.print(i, 0, i);
     }
     vc1.stroke(); // 描画
@@ -123,7 +123,7 @@ window.addEventListener("load", () => {
     // dataの内容の描画
     vc1.beginPath(); // 描画開始の宣言
     vc1.lineStart(0, 0); // 始点の設定
-    for (var i = 0; i < plotnumber; i += wave.skip) {
+    for (let i = 0; i < plotnumber; i += wave.skip) {
       vc1.lineto(i, wave.data[i]);
     }
     vc1.stroke(); // 描画
@@ -136,7 +136,7 @@ window.addEventListener("load", () => {
   document.getElementById("dft").addEventListener("click", () => {
     wave.dft();
     // 仮想座標対応Canvasの初期化
-    var vc2 = new VCanvas(document.getElementById("canvas2"));
+    let vc2 = new VCanvas(document.getElementById("canvas2"));
     vc2.forecolor(0, 0, 0);
     vc2.cls(); // 描画内容の消去
 
@@ -145,14 +145,14 @@ window.addEventListener("load", () => {
     vc2.beginPath(); // 描画開始の宣言
     vc2.line(0, 0, wave.data2.length, 0);
     vc2.line(0, -1, 0, 1);
-    for (var i = 0; i < wave.data2.length; i += wave.skip * 100) {
+    for (let i = 0; i < wave.data2.length; i += wave.skip * 100) {
       vc2.print(i, 0, i);
     }
     vc2.stroke(); // 描画
 
     // dataの内容の描画
     vc2.beginPath(); // 描画開始の宣言
-    for (var i = 1; i < wave.data2.length; i++) {
+    for (let i = 1; i < wave.data2.length; i++) {
       vc2.rect(i, 0, i + 1, wave.data2[i]); // DFTのグラフ描画
       //console.log( i + ":" + data2[i] );          // 演算結果をコンソールに表示
     }

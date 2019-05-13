@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>グラフ描画</title>
     <script src="vcanvas.js"></script>
     <script src="WebkitPlayer.js"></script>
     <script src="dft.js"></script>
+    <style>
+#waves {
+padding: 0.2em;
+border: solid;
+border-color:lightpink;
+}
+#method {
+  padding: 0.2em;
+  border: solid;
+  border-color:lightseagreen;
+}
+    </style>
   </head>
   <body>
     <h1>グラフ描画のサンプル</h1>
     <form>
-      <input type="button" value="440Hz" id="wave1">
-      <input type="button" value="880Hz" id="wave2">
-      <input type="button" value="440Hz + 880Hz" id="wave3">
-      <input type="button" value="矩形波" id="wave4">
-      <input type="button" value="ノコギリ波" id="wave5">
-      <input type="button" value="グラフ描画" id="graph">
-      <input type="button" value="音像化" id="sound">
-      <input type="button" value="DFT" id="dft">
+      <span id="waves">
+        <input type="button" value="440Hz" id="wave1" />
+        <input type="button" value="880Hz" id="wave2" />
+        <input type="button" value="440Hz + 880Hz" id="wave3" />
+        <input type="button" value="矩形波" id="wave4" />
+        <input type="button" value="ノコギリ波" id="wave5" />
+      </span>
+      <span id="method">
+        <input type="button" value="グラフ描画" id="graph" />
+        <input type="button" value="音像化" id="sound" />
+        <input type="button" value="DFT" id="dft" />
+      </span>
     </form>
     <canvas id="canvas1" width="800" height="300"></canvas>
     <canvas id="canvas2" width="800" height="300"></canvas>
