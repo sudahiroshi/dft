@@ -5,22 +5,23 @@ class Wave {
     this.sample_rate = 44100; // サンプリングレート
     this.data; // データを入れておく変数
     this.data2;
-    this.area = 5; // 表示領域（全体の先頭5%を表示）
+    this.area = 2; // 表示領域（全体の先頭5%を表示）
     this.skip = 2; // グラフ表示時の間引き数
     this.dft_area = 0.23; // DFTの演算・表示領域を先頭100サンプル程度に調整
   }
 
-  synthesize(freq, amp, member, sec) {
+  synthesize(freq, amp, member, sec, phase ) {
     // 基本周波数と，含まれる周波数スペクトラムを受け取り，波形を合成するメソッド
     // freqは基本周波数
     // memberは周波数をkey，振幅をvalueとするハッシュテーブル
     // secは秒数
+    // phaseは周波数をkey, 位相をvalueとするハッシュテーブル
     this.data = new Array(this.sample_rate * sec);
     for (let i = 0; i < this.data.length; i++) this.data[i] = 0;
     for (let j in member) {
       let k = (2 * Math.PI * freq * j) / this.sample_rate;
       for (let i = 0; i < this.data.length; i++) {
-        this.data[i] += member[j] * Math.sin(k * i);
+        this.data[i] += member[j] * Math.sin(k  * i+ phase[j]);
       }
     }
     for (let i = 0; i < this.data.length; i++) {
@@ -59,7 +60,8 @@ window.addEventListener("load", () => {
       440,
       1,
       { 1: 1 },
-      1
+      1,
+      { 1: 90.0/180.0*Math.PI}
     );
   });
 
@@ -69,7 +71,8 @@ window.addEventListener("load", () => {
         880,
         1,
         { 1: 1 },
-        1
+        1,
+        {1:0}
       );
   });
 
@@ -79,7 +82,8 @@ window.addEventListener("load", () => {
         440,
         0.5,
         { 1: 1, 2: 1 },
-        1
+        1,
+        { 1:0, 2: 90.0/180.0*Math.PI }
         );
   });
 
@@ -89,7 +93,8 @@ window.addEventListener("load", () => {
       440,
       0.8,
       { 1: 1, 3: 1 / 3.0, 5: 1 / 5.0, 7: 1 / 7.0, 9: 1 / 9.0 },
-      1
+      1,
+      { 1: 0, 3: 0, 5: 0, 7: 0, 9: 0 }
     );
   });
 
@@ -98,7 +103,7 @@ window.addEventListener("load", () => {
     wave.synthesize(
       440,
       0.3,
-      { 1: 2, 2: -1, 3: 2 / 3, 4: -1 / 2, 5: 2 / 5, 6: -1 / 3 },
+      { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
       1
     );
   });

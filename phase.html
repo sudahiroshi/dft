@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>グラフ描画</title>
+    <script src="vcanvas.js"></script>
+    <script src="WebkitPlayer.js"></script>
+    <script src="wave.js"></script>
+    <script src="phase.js"></script>
+    <style>
+#waves {
+padding: 0.2em;
+border: solid;
+border-color:lightpink;
+}
+#method {
+  padding: 0.2em;
+  border: solid;
+  border-color:lightseagreen;
+}
+    </style>
+  </head>
+  <body>
+    <h1>グラフ描画のサンプル</h1>
+    <form>
+      <span id="waves">
+        440Hz:
+        -180:<input type="range" name="sliderp1" id="sliderp1" min="-180" max="180" step="10" value="0">:180
+        0:<input type="range" name="slidera1" id="slidera1" min="0" max="1" step="0.01" value="0.5">:1<br>
+        880Hz:
+        -180:<input type="range" name="sliderp2" id="sliderp2" min="-180" max="180" step="10" value="0">:180
+        0:<input type="range" name="slidera2" id="slidera2" min="0" max="1" step="0.01" value="0.5">:1<br>
+    </span>
+    </form>
+    <canvas id="canvas1" width="800" height="300"></canvas>
+    <canvas id="canvas2" width="800" height="300"></canvas>
+  </body>
+</html>
