@@ -1,8 +1,7 @@
 "use strict";
 
 class Phase {
-  constructor( player ) {
-      this.player = player;
+  constructor() {
     this.data = {
       freq: 440,
       amp: 0.5,
@@ -51,14 +50,10 @@ class Phase {
       this.data["member"][number] = amp;
   }
 
-  play() {
-    this.player.playData(this.wave.data, 1);
-  }
 }
 
 class Phase2 {
-    constructor( player ) {
-        this.player = player;
+    constructor() {
       this.data = {
         freq: 440,
         amp: 0.5,
@@ -102,19 +97,15 @@ class Phase2 {
         this.data["member"][number][elm] = amp;
     }
 
-    play() {
-        this.player.playData(this.wave.data, 1);
-      }
   }
 window.addEventListener("load", () => {
 
 
   // サンプリング周波数44.1kHz，モノラルとして初期化する
-  let player = new WebkitPlayer( 44100, 1);
 
     // 波形データを初期化
-    let phase = new Phase( player );
-    let phase2 = new Phase2( player );
+    let phase = new Phase(  );
+    let phase2 = new Phase2(  );
 
     // 上のグラフ
   document.querySelector("#sliderp1").addEventListener("input", (ev) => {
@@ -201,10 +192,4 @@ window.addEventListener("load", () => {
   phase.graph();
   phase2.graph();
 
-  document.getElementById("sound1").addEventListener("click", () => {
-    phase.play();
-  });
-  document.getElementById("sound2").addEventListener("click", () => {
-    phase2.play();
-  });
 });
