@@ -10,7 +10,7 @@ class Wave {
     this.dft_area = 0.23; // DFTの演算・表示領域を先頭100サンプル程度に調整
   }
 
-  synthesize(freq, amp, member, sec, phase ) {
+  synthesize(freq, amp, member, sec, phase) {
     // 基本周波数と，含まれる周波数スペクトラムを受け取り，波形を合成するメソッド
     // freqは基本周波数
     // memberは周波数をkey，振幅をvalueとするハッシュテーブル
@@ -21,7 +21,26 @@ class Wave {
     for (let j in member) {
       let k = (2 * Math.PI * freq * j) / this.sample_rate;
       for (let i = 0; i < this.data.length; i++) {
-        this.data[i] += member[j] * Math.sin(k  * i+ phase[j]);
+        this.data[i] += member[j] * Math.sin(k * i + phase[j]);
+      }
+    }
+    for (let i = 0; i < this.data.length; i++) {
+      this.data[i] *= amp;
+    }
+  }
+  synthesize2(freq, amp, member, sec) {
+    // 基本周波数と，含まれる周波数スペクトラムを受け取り，波形を合成するメソッド
+    // freqは基本周波数
+    // memberは周波数をkey，振幅をvalueとするハッシュテーブル
+    // secは秒数
+    this.data = new Array(this.sample_rate * sec);
+    for (let i = 0; i < this.data.length; i++) this.data[i] = 0;
+    for (let j in member) {
+      let k = (2 * Math.PI * freq * j) / this.sample_rate;
+      for (let i = 0; i < this.data.length; i++) {
+        this.data[i] +=
+          member[j]["sin"] * Math.sin(k * i) +
+          member[j]["cos"] * Math.cos(k * i);
       }
     }
     for (let i = 0; i < this.data.length; i++) {

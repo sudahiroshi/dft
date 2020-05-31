@@ -50,15 +50,61 @@ class Phase {
       this.data["member"][number] = amp;
   }
 }
+
+class Phase2 {
+    constructor() {
+      this.data = {
+        freq: 440,
+        amp: 0.5,
+        member: { 1: { "sin":1, "cos":0 }, 2: {"sin":0, "cos":0} },
+        sec: 1,
+      };
+      this.wave = new Wave();
+      this.vc1 = new VCanvas(document.getElementById("canvas2"));
+    }
+
+    graph() {
+        let wave = this.wave;
+        let data = this.data;
+        wave.synthesize2( data.freq, data.amp, data.member, data.sec );
+      // 仮想座標対応Canvasの初期化
+      let vc1 = this.vc1;
+      vc1.forecolor(0, 0, 0);
+      let plotnumber = (wave.data.length * wave.area) / 100;
+      vc1.cls(); // 描画内容の消去
+
+      // X軸とY軸の描画
+      vc1.scale(0, 1, plotnumber, -2);
+      vc1.beginPath(); // 描画開始の宣言
+      vc1.line(0, 0, wave.data.length, 0);
+      vc1.line(0, -1, 0, 1);
+      for (let i = 0; i < plotnumber; i += wave.skip * 100) {
+        vc1.print(i, 0, i);
+      }
+      vc1.stroke(); // 描画
+
+      // dataの内容の描画
+      vc1.beginPath(); // 描画開始の宣言
+      vc1.lineStart(0, 0); // 始点の設定
+      for (let i = 0; i < plotnumber; i += wave.skip) {
+        vc1.lineto(i, wave.data[i]);
+      }
+      vc1.stroke(); // 描画
+    }
+
+    setAmp( number, elm, amp ) {
+        this.data["member"][number][elm] = amp;
+    }
+  }
 window.addEventListener("load", () => {
   // 波形データを初期化
   let phase = new Phase();
+  let phase2 = new Phase2();
 
   // サンプリング周波数44.1kHz，モノラルとして初期化する
 //  let player = new WebkitPlayer(wave.sample_rate, 1);
 
-  // wave3が押された場合に440Hzと880Hzのsin波を合成する
-
+    // 上のグラフ
   document.querySelector("#sliderp1").addEventListener("input", (ev) => {
     let val = ev.srcElement.value;
     phase.setPhase(1, val);
@@ -82,7 +128,42 @@ window.addEventListener("load", () => {
     phase.setAmp(2, val);
     phase.graph();
   });
+
+  // 下のグラフ
+  document.querySelector("#sliders1").addEventListener("input", (ev) => {
+    let val = ev.srcElement.value;
+    phase2.setAmp(1, "sin", val);
+    phase2.graph();
+  });
+  document.querySelector("#sliderc1").addEventListener("input", (ev) => {
+    let val = ev.srcElement.value;
+    phase2.setAmp(1, "cos", val);
+    phase2.graph();
+  });
+  document.querySelector("#sliders2").addEventListener("input", (ev) => {
+    let val = ev.srcElement.value;
+    phase2.setAmp(2, "sin", val);
+    phase2.graph();
+  });
+  document.querySelector("#sliderc2").addEventListener("input", (ev) => {
+    let val = ev.srcElement.value;
+    phase2.setAmp(2, "cos", val);
+    phase2.graph();
+  });
+  document.querySelector("#slidersc1").addEventListener("input", (ev) => {
+    let val = ev.srcElement.value;
+    let sin = Math.sin(val/180.0*Math.PI)/2.0;
+    let cos = Math.cos(val/180.0*Math.PI)/2.0;
+    phase2.setAmp(1, "sin", cos);
+    phase2.setAmp(1, "cos", sin);
+    document.querySelector("#sliders1").value = cos;
+    document.querySelector("#sliderc1").value = sin;
+    phase2.graph();
+  });
+
+  // 初期状態のグラフ描画
   phase.graph();
+  phase2.graph();
 //   document.getElementById("sound").addEventListener("click", () => {
 //     player.playData(wave.data, 1);
 //   });

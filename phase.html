@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>グラフ描画</title>
+    <title>位相と波形</title>
     <script src="vcanvas.js"></script>
     <script src="WebkitPlayer.js"></script>
     <script src="wave.js"></script>
@@ -21,18 +21,32 @@ border-color:lightpink;
     </style>
   </head>
   <body>
-    <h1>グラフ描画のサンプル</h1>
+    <h1>位相差と波形</h1>
+    <h2>sinの位相を直接変更する</h2>
     <form>
-      <span id="waves">
+      <span id="wave1">
         440Hz:
-        -180:<input type="range" name="sliderp1" id="sliderp1" min="-180" max="180" step="10" value="0">:180
+        -180:<input type="range" name="sliderp1" id="sliderp1" min="-180" max="360" step="10" value="0">:180
         0:<input type="range" name="slidera1" id="slidera1" min="0" max="1" step="0.01" value="0.5">:1<br>
         880Hz:
-        -180:<input type="range" name="sliderp2" id="sliderp2" min="-180" max="180" step="10" value="0">:180
+        -180:<input type="range" name="sliderp2" id="sliderp2" min="-180" max="360" step="10" value="0">:180
         0:<input type="range" name="slidera2" id="slidera2" min="0" max="1" step="0.01" value="0.5">:1<br>
     </span>
     </form>
     <canvas id="canvas1" width="800" height="300"></canvas>
+    <h2>sinとcosで位相を変更する</h2>
+    <form>
+      <span id="wave2">
+        440Hz:
+        -1:<input type="range" name="sliders1" id="sliders1" min="-1" max="1" step="0.01" value="0.5">:1
+        -1:<input type="range" name="sliderc1" id="sliderc1" min="-1" max="1" step="0.01" value="0.5">:1
+        0:<input type="range" name="slidersc1" id="slidersc1" min="-180" max="360" step="10" value="0">:1<br>
+        880Hz:
+        -1:<input type="range" name="sliders2" id="sliders2" min="-1" max="1" step="0.01" value="0">:1
+        -1:<input type="range" name="sliderc2" id="sliderc2" min="-1" max="1" step="0.01" value="0">:1
+        0:<input type="range" name="slidersc2" id="slidersc2" min="-180" max="360" step="10" value="0">:1<br>
+    </span>
+    </form>
     <canvas id="canvas2" width="800" height="300"></canvas>
   </body>
 </html>
