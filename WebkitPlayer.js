@@ -7,6 +7,7 @@
     this.rate = samplerate;
     this.chan = channel;
 
+    window.AudioContext = window.webkitAudioContext || window.AudioContext;
     this.context = new AudioContext();
     this.buf = null;
     this.dest = this.context.destination;
